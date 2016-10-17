@@ -35,7 +35,7 @@ switch (splitword[howmany-1]) {
  {
     postData='bulb=' + bulb + '&onoff=' + onoff;
 }
-     say = say + splitword[howmany-1];
+     say = say + ' ' + splitword[howmany-1];
       
    var http = require( 'http' );
 var options = {
