@@ -1,27 +1,45 @@
 exports.handler = function( event, context ) {
 var targetSlot = event.request.intent.slots.Scene.value;
- switch (targetSlot) {
-        case "living room light on" :  postData = "bulb=2&onoff=1"; break;
-        case "living room light off" : postData = "bulb=2&onoff=0"; break; 
-         case "bedroom light on" :  postData = "bulb=1&onoff=1"; break;
-        case "bedroom light off" : postData = "bulb=1&onoff=0"; break; 
-           case "living room lights on" :  postData = "bulb=2&onoff=1"; break;
-        case "living room lights off" : postData = "bulb=2&onoff=0"; break; 
-         case "bedroom lights on" :  postData = "bulb=1&onoff=1"; break;
-        case "bedroom lights off" : postData = "bulb=1&onoff=0"; break; 
-        case "all lights on" : postData ="bulb=all&onoff=1"; break;
-        case "all lights off" : postData="bulb=all&onoff=0";break;
-        case "living room lights blue" : postData="bulb=2&onoff=1&colour=blue";break;
-        case "living room lights white" : postData="bulb=2&onoff=1&colour=white";break;
-        case "downstairs lights on" : postData="bulb=2&onoff=1"; break;
-        case "downstairs lights off" : postData="bulb=2&onoff=0"; break;
-        case "upstairs lights on": postData="bulb=1&onoff=1"; break;
-        case "upstairs lights off": postData="bulb=1&onoff=0";break;
-      }
+var splitword = targetSlot.split(" ");
+var bulb=''; 
+var onoff='';
+var howmany = splitword.length;
+var say='';
+var i=0;
+var room="";
+do {
+    room=room + splitword[i];
+    i++;
+}
+while (i < howmany-1);
+switch (room) {
+    case "livingroomlight" : bulb=2; say='living room light';break;
+    case "bedroomlight" :  bulb=1;say='bedroom light';break;
+    case "downstairslight":  bulb=2;say='living room light';break;
+    case "upstairslight":  bulb=1;say='bedroom light';break;
+    case "livingroomlights":  bulb=2;say='living room light';break;
+    case "downstairslights":  bulb=2;say='downstairs light';break;
+    case "upstairslights":  bulb=1;say='upstairs light';break;
+}
+
+switch (splitword[howmany-1]) {
+    case "on" : onoff='1';break;
+    case "off": onoff='0';break;
+    default:onoff='colour';break;
+}
+ 
+ if (onoff=='colour') {
+     postData='bulb=' + bulb + '&onoff=1&colour=' + splitword[howmany-1];
+
+ } else
+ {
+    postData='bulb=' + bulb + '&onoff=' + onoff;
+}
+     say = say + splitword[howmany-1];
       
    var http = require( 'http' );
 var options = {
-      host: '<External IP Address to your raspberry pi>',
+      host: 'mellownet.dlinkddns.com',
       path: '/lights_advanced.php?' + postData,
       port: '80',
       method: 'GET',
@@ -42,7 +60,7 @@ var options = {
    };
 
    
-   var report = 'I have turned the ' + targetSlot;
+   var report = 'I have turned the ' + say;
      var req = http.request(options, callback);
    console.log(report);
    console.log(postData);
@@ -52,6 +70,7 @@ var options = {
 
    }
 };
+
 
 function output( text, context ) {
 
