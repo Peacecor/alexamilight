@@ -43,7 +43,8 @@ switch ($whichlight) {
         }
       
     case "0": { $milight->rgbwGroup1Off(); $action=$action . "1 off,"; break; }
-    } 
+    }
+  break;
   }
    
   case "2": {
@@ -75,6 +76,7 @@ switch ($whichlight) {
     } 
   } 
   $action = $action . " " . $colour . " " . $brightness;
+break;
 }
  
 
